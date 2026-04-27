@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>🎁 Квест для мужа</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', 'Cormorant Garamond', Georgia, serif;
+            background: #0a0a0a;
+            background-image: radial-gradient(ellipse at 50% 30%, #1a1206 0%, #0a0a0a 60%), radial-gradient(ellipse at 80% 20%, #261d0a 0%, transparent 40%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            margin: 0;
+            color: #e8d5a3;
+            position: relative;
+            overflow-x: hidden;
+        }
+        /* ========================================= */
+        /* ⚠️ КАРТИНКА ДЛЯ ФОНА (раскомментируй и вставь ссылку) */
+        /* ========================================= */
+        /* 
+        body {
+            background: url('ССЫЛКА_НА_ТВОЮ_КАРТИНКУ') no-repeat center center fixed;
+            background-size: cover;
+        }
+        */
+
+        .card {
+            max-width: 550px;
+            width: 100%;
+            background: rgba(10,10,10,0.88);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1.5px solid rgba(180,145,55,0.4);
+            border-radius: 36px;
+            padding: 32px 24px;
+            box-shadow: 0 0 40px rgba(160,125,35,0.15), 0 20px 50px rgba(0,0,0,0.8), 0 0 0 1px rgba(180,145,55,0.1) inset;
+            position: relative;
+            z-index: 20;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            background: linear-gradient(180deg, #e0c060 0%, #a47c2c 50%, #8b691d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+        .subhead {
+            font-size: 1rem;
+            opacity: 0.85;
+            margin-bottom: 28px;
+            border-left: 4px solid #b8912e;
+            padding-left: 16px;
+            color: #b8a06a;
+            letter-spacing: 1.5px;
+        }
+        .step-indicator {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #b8912e;
+            margin-bottom: 12px;
+        }
+        .question-text {
+            font-size: 1.6rem;
+            font-weight: 500;
+            line-height: 1.4;
+            margin-bottom: 24px;
+            color: #e0d0a8;
+        }
+        .quest-image, .final-image {
+            width: 100%;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            border: 2px solid rgba(180,140,50,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            max-height: 400px;
+            object-fit: cover;
+        }
+        .input-group { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+        input {
+            background: rgba(20,16,8,0.7);
+            border: 1.5px solid rgba(175,140,50,0.4);
+            border-radius: 60px;
+            padding: 16px 22px;
+            font-size: 1.2rem;
+            color: #e0d0a8;
+            outline: none;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        input:focus {
+            border-color: #c9a84c;
+            background: rgba(30,22,10,0.9);
+            box-shadow: 0 0 25px rgba(180,140,40,0.2);
+        }
+        input::placeholder { color: #7a6b45; }
+        .btn {
+            background: linear-gradient(180deg, #dbb442 0%, #b8942e 30%, #8a6518 70%, #6d4f10 100%);
+            border: none;
+            border-radius: 60px;
+            padding: 16px 26px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0d0b06;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 0 #5a3e0c, 0 8px 20px rgba(180,135,30,0.35), inset 0 1px 2px rgba(255,220,120,0.4);
+            text-align: center;
+            margin-top: 10px;
+            width: 100%;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 10%;
+            width: 80%;
+            height: 35%;
+            background: linear-gradient(180deg, rgba(255,230,160,0.5) 0%, transparent 100%);
+            border-radius: 40px;
+            pointer-events: none;
+        }
+        .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #4a3208; }
+        .btn:disabled { opacity: 0.35; transform: none; box-shadow: 0 6px 0 #5a3e0c; pointer-events: none; filter: grayscale(0.5); }
+        .secondary-btn {
+            background: linear-gradient(180deg, #2c2818 0%, #1a1608 50%, #0f0d05 100%);
+            color: #c9a84c;
+            border: 1px solid rgba(180,145,55,0.25);
+        }
+        .skip-btn {
+            background: linear-gradient(180deg, #222 0%, #0a0a0a 100%);
+            color: #8a8a8a;
+            font-size: 0.85rem;
+            padding: 12px;
+        }
+        .location-row { display: flex; flex-direction: column; gap: 10px; margin: 15px 0 5px; }
+        .location-buttons { display: flex; gap: 10px; align-items: center; }
+        .location-status {
+            background: rgba(10,8,4,0.7);
+            padding: 10px 16px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            color: #b8a060;
+            flex: 1;
+            text-align: center;
+            border: 1px solid rgba(180,145,55,0.2);
+        }
+        .coordinates-input-row { display: flex; gap: 8px; }
+        .coordinates-input-row input { flex: 1; padding: 12px 16px; font-size: 0.95rem; }
+        .error-msg { color: #d4785c; margin-top: 6px; min-height: 24px; }
+        .small-note { font-size: 0.8rem; opacity: 0.5; margin-top: 30px; text-align: center; color: #b8912e; }
+        .hidden { display: none !important; }
+        .intro-text { font-size: 1.1rem; line-height: 1.7; margin-bottom: 24px; color: #cdbc90; }
+        .intro-text strong { color: #dbb442; }
+        .rules-list { list-style: none; padding: 0; margin: 0 0 28px 0; }
+        .rules-list li {
+            padding: 10px 0 10px 32px;
+            position: relative;
+            border-bottom: 1px solid rgba(180,140,50,0.12);
+            color: #b8a06a;
+        }
+        .rules-list li::before { content: "✦"; position: absolute; left: 0; top: 10px; color: #c9a84c; }
+        .map-preview { width: 100%; border-radius: 16px; margin: 8px 0; border: 1px solid rgba(180,145,55,0.3); }
+        .confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100; overflow: hidden; }
+        .confetti-piece {
+            position: absolute;
+            top: -10%;
+            animation: confetti-fall var(--fall-duration) linear forwards;
+        }
+        @keyframes confetti-fall {
+            0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(var(--spin)) scale(0.3); opacity: 0; }
+        }
+        .gold-spark {
+            position: fixed;
+            pointer-events: none;
+            z-index: 200;
+            animation: spark-burst 0.9s ease-out forwards;
+        }
+        @keyframes spark-burst {
+            0% { transform: translate(0,0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--sx), var(--sy)) scale(0); opacity: 0; }
+        }
+        .leprechaun-text {
+            text-align: center;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: #c9a84c;
+            margin-top: 20px;
+            text-shadow: 0 0 12px rgba(180,140,40,0.3);
+        }
+        .final-message {
+            text-align: center;
+            font-size: 2rem;
+            line-height: 1.4;
+            font-weight: 600;
+            padding: 20px 0;
+            white-space: pre-line;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            background: linear-gradient(180deg, #f0d870 0%, #c9a84c 40%, #9b7522 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.7));
+        }
+        /* Поле ввода пин-кода */
+        .pin-section {
+            margin: 20px 0 10px;
+        }
+        .pin-section input {
+            text-align: center;
+            letter-spacing: 8px;
+            font-size: 1.8rem;
+            padding: 14px;
+            font-weight: 600;
+        }
+        .pin-error {
+            color: #e05555;
+            font-size: 0.9rem;
+            min-height: 22px;
+            margin-top: 6px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="confetti-container" id="confettiContainer"></div>
+<div class="card" id="appContainer">
+    <div id="introScreen">
+        <h1>🎂 С днём рождения,<br>любимый!</h1>
+        <div class="subhead" id="introSubhead">персональный квест</div>
+        <div class="intro-text" id="introText"></div>
+        <ul class="rules-list">
+            <li>Всего <strong>10 шагов</strong>, один за другим</li>
+            <li>Пиши ответы в поле ввода (регистр не важен)</li>
+            <li>На 4-м шаге — <strong>геолокация</strong> (можно ввести вручную или пропустить)</li>
+            <li>Дойди до конца — там <strong>сюрприз</strong> ❤️</li>
+        </ul>
+        <!-- ========================================= -->
+        <!-- 🔐 ПИН-КОД ДЛЯ ДОСТУПА                     -->
+        <!-- ПОМЕНЯЙ "0000" НА СВОЙ ПАРОЛЬ (цифры/слово) -->
+        <!-- ========================================= -->
+        <div class="pin-section">
+            <input type="password" id="pinInput" placeholder="Введи код" maxlength="10" inputmode="numeric">
+            <div class="pin-error" id="pinError"></div>
+        </div>
+        <button class="btn" id="startGameBtn">🚀 Начать игру</button>
+        <div class="small-note">твой личный квест</div>
+    </div>
+    <div id="questScreen" class="hidden">
+        <div class="step-indicator" id="stepIndicator"></div>
+        <div class="question-text" id="questionText"></div>
+        <img id="questImage" class="quest-image" src="" style="display:none;">
+        <div class="input-group">
+            <input type="text" id="answerInput" placeholder="Твой ответ..." autocomplete="off">
+            <div class="error-msg" id="errorMsg"></div>
+            <button class="btn" id="checkAnswerBtn">Ответить</button>
+            <button class="btn secondary-btn" id="nextStepBtn" disabled>Дальше ➔</button>
+        </div>
+        <div id="geoBlock" class="location-row hidden">
+            <div class="location-buttons">
+                <button class="btn secondary-btn" id="checkLocationBtn">📍 Автоопределение</button>
+                <span class="location-status" id="locationStatus">не проверено</span>
+            </div>
+            <div class="coordinates-input-row">
+                <input type="text" id="manualLatInput" placeholder="Широта" inputmode="decimal">
+                <input type="text" id="manualLngInput" placeholder="Долгота" inputmode="decimal">
+                <button class="btn secondary-btn" id="manualGeoBtn">OK</button>
+            </div>
+            <button class="btn skip-btn" id="skipGeoBtn">⏭️ Пропустить</button>
+            <div class="error-msg" id="geoErrorMsg"></div>
+            <img id="mapPreview" class="map-preview hidden" src="">
+        </div>
+    </div>
+    <div id="finalScreen" class="hidden">
+        <div class="final-message" id="finalMessage"></div>
+        <img id="finalImage" class="final-image" src="" style="display:none;">
+        <div class="leprechaun-text" id="leprechaunMessage"></div>
+        <button class="btn" id="restartBtn" style="margin-top:30px;">Пройти ещё раз</button>
+        <div class="small-note">❤️ с любовью, твоя половинка</div>
+    </div>
+</div>
+
+<script>
+(function() {
+    // =========================================================
+    // НАСТРОЙКИ
+    // =========================================================
+    // 🔐 ПИН-КОД (измени на свой, например "2809" или "любовь")
+    const ACCESS_PIN = "1706"; // ← ПОМЕНЯЙ ЗДЕСЬ НА СВОЙ ПАРОЛЬ
+    const PLAYER_NAME = "любимый";
+    const INTRO_TEXT = "Я подготовила для тебя <strong>10 заданий</strong> — загадки, воспоминания и одно особенное место, куда нужно будет дойти.";
+    const FINAL_IMAGE_URL = ""; // Ссылка на финальную картинку
+    const LEPRECHAUN_FINAL_TEXT = "✨ Говорят, где-то под корнями фикуса леприкон Аня спрятала ништяки... Присмотрись внимательнее! 🍀";
+    const GEO_TARGET_LAT = 55.761086;
+    const GEO_TARGET_LNG = 37.612655;
+    const GEO_RADIUS_METERS = 30;
+    const MAP_PREVIEW_URL = 'https://staticmap.openstreetmap.de/staticmap.php?center='+GEO_TARGET_LAT+','+GEO_TARGET_LNG+'&zoom=17&size=600x300&markers='+GEO_TARGET_LAT+','+GEO_TARGET_LNG+',red-pushpin';
+
+    const steps = [
+        { question: "1️⃣ Цветы, что цветут в мороз, дадут тебе первую подсказку. Их называют как неудавшихся (вроде бы?) революционеров.", image: "", answer: "42", hint: "Они стоят на подоконнике в зале", useGeo: false },
+        { question: "2️⃣ Я ее обожаю, особенно с молоком! Ты мне ее регулярно готовишь. Давай заглянем к ней, вдруг это прояснит ситуацию?", image: "", answer: "шк гречки", hint: "Там ещё записка, осмотрись внимательнее", useGeo: false },
+        { question: "3️⃣ Есть у нас в районе магазин. Мы его не очень жалуем, но Ессентуки-17 продавались только там.", image: "", answer: "магнит", hint: "Красный логотип, рядом с остановкой", useGeo: false },
+        { question: "4️⃣ Прогуляемся? Может быть, за минералочкой?", image: "", answer: "", hint: "Иди к точке на карте или введи координаты", useGeo: true },
+        { question: "5️⃣ Как думаешь, какой код у картошки в этом магазине?", image: "", answer: "42", hint: "Посмотри на ценник", useGeo: false },
+        { question: "6️⃣ Как думаешь, какой номер ИНН указывается на чеках этого магазина?", image: "", answer: "003", hint: "Три цифры внизу чека", useGeo: false },
+        { question: "7️⃣ Если идти по широкой дороге, друг за другом идут магазины и кафе. Какое слово получится, если ввести их первые буквы?", image: "", answer: "про", hint: "Первые буквы по порядку", useGeo: false },
+        { question: "8️⃣ Люди неохотно меняют стандартные двери. Но наши соседи из 110 квартиры ее уже поменяли. Какого цвета дверь?", image: "", answer: "серая", hint: "Подъездная дверь", useGeo: false },
+        { question: "9️⃣ Мы любим это место, почти каждый обед тут сидим. На чем посидим?", image: "", answer: "диван", hint: "Мягкое и удобное", useGeo: false },
+        { question: "🔟 По левую руку сидит пассажир из Дятьково. Как его зовут?", image: "", answer: "фикус", hint: "Большое растение в углу", useGeo: false }
+    ];
+
+    const FINAL_MESSAGE = "🎁 С днём рождения, "+PLAYER_NAME+"!\n\nТы справился со всеми 10 заданиями!\nТы — моя самая большая победа.\n\nЯ тебя очень люблю! ❤️";
+
+    // DOM
+    const introScreen = document.getElementById('introScreen');
+    const questScreen = document.getElementById('questScreen');
+    const finalScreen = document.getElementById('finalScreen');
+    const stepIndicator = document.getElementById('stepIndicator');
+    const questionText = document.getElementById('questionText');
+    const questImage = document.getElementById('questImage');
+    const finalImage = document.getElementById('finalImage');
+    const answerInput = document.getElementById('answerInput');
+    const checkAnswerBtn = document.getElementById('checkAnswerBtn');
+    const nextStepBtn = document.getElementById('nextStepBtn');
+    const errorMsg = document.getElementById('errorMsg');
+    const geoBlock = document.getElementById('geoBlock');
+    const locationStatus = document.getElementById('locationStatus');
+    const geoErrorMsg = document.getElementById('geoErrorMsg');
+    const mapPreview = document.getElementById('mapPreview');
+    const finalMessageDiv = document.getElementById('finalMessage');
+    const leprechaunMessageDiv = document.getElementById('leprechaunMessage');
+    const confettiContainer = document.getElementById('confettiContainer');
+    const pinInput = document.getElementById('pinInput');
+    const pinError = document.getElementById('pinError');
+    const startGameBtn = document.getElementById('startGameBtn');
+
+    document.getElementById('introSubhead').textContent = "персональный квест";
+    document.getElementById('introText').innerHTML = INTRO_TEXT;
+
+    let currentStepIndex = 0;
+    let stepCompleted = false;
+    let geoPassedForCurrent = false;
+    let confettiInterval = null;
+    let confettiVolleyInterval = null;
+
+    function norm(s) { return s.trim().toLowerCase().replace(/\s+/g, ' '); }
+
+    // Песчинки
+    function spawnSparks(x, y, n) {
+        var cols = ['#e8c547','#dbb442','#f0d870','#c9a84c','#b8912e','#f5e080','#a47c2c','#ffec9e','#d4af37','#c59b27'];
+        for (var i=0; i<n; i++) {
+            var s = document.createElement('div');
+            s.className = 'gold-spark';
+            var sz = 2+Math.random()*5;
+            s.style.width = s.style.height = sz+'px';
+            var c = cols[Math.floor(Math.random()*cols.length)];
+            s.style.backgroundColor = c;
+            s.style.boxShadow = '0 0 '+(3+Math.random()*7)+'px '+c;
+            s.style.left = x+'px';
+            s.style.top = y+'px';
+            var a = Math.random()*Math.PI*2, d = 20+Math.random()*55;
+            s.style.setProperty('--sx', Math.cos(a)*d+'px');
+            s.style.setProperty('--sy', Math.sin(a)*d+'px');
+            document.body.appendChild(s);
+            setTimeout(function(){ s.remove(); }, 900);
+        }
+    }
+
+    function attachSparks() {
+        [].forEach.call(document.querySelectorAll('.btn'), function(b) {
+            b.addEventListener('click', function(e) {
+                var r = b.getBoundingClientRect();
+                spawnSparks(r.left+r.width/2, r.top+r.height/2, 22);
+            });
+        });
+    }
+
+    // Конфетти
+    function createConfetti() {
+        var p = document.createElement('div');
+        p.className = 'confetti-piece';
+        var cols = ['#e8c547','#f0d870','#b8912e','#dbb442','#c9a84c','#f5e080','#a47c2c','#d4af37','#c59b27','#ffec9e','#fffbe6','#fef3c7'];
+        var c = cols[Math.floor(Math.random()*cols.length)];
+        var w = 3+Math.random()*12;
+        p.style.width = w+'px';
+        p.style.height = (Math.random()>0.5?12+Math.random()*25:w)+'px';
+        p.style.backgroundColor = c;
+        p.style.boxShadow = '0 0 '+(4+Math.random()*8)+'px '+c;
+        p.style.left = Math.random()*100+'%';
+        p.style.top = -(Math.random()*20+5)+'%';
+        p.style.setProperty('--fall-duration', (2.5+Math.random()*5)+'s');
+        p.style.setProperty('--spin', (Math.random()*720-360)+'deg');
+        confettiContainer.appendChild(p);
+        setTimeout(function(){ p.remove(); }, 6000);
+    }
+
+    function volley(n) { for (var i=0; i<n; i++) setTimeout(createConfetti, i*12); }
+
+    function startConfetti() {
+        if (confettiInterval) clearInterval(confettiInterval);
+        if (confettiVolleyInterval) clearInterval(confettiVolleyInterval);
+        confettiContainer.innerHTML = '';
+        volley(130);
+        confettiInterval = setInterval(function(){ for (var i=0;i<18;i++) createConfetti(); }, 350);
+        confettiVolleyInterval = setInterval(function(){ volley(90); }, 3800);
+    }
+
+    function updateUI(idx) {
+        var s = steps[idx];
+        stepIndicator.textContent = 'ШАГ '+(idx+1)+'/'+steps.length;
+        questionText.textContent = s.question;
+        questImage.style.display = (s.image&&s.image.length>5?'block':'none');
+        if (s.image) questImage.src = s.image;
+        answerInput.value = '';
+        errorMsg.textContent = '';
+        geoErrorMsg.textContent = '';
+        checkAnswerBtn.disabled = false;
+        nextStepBtn.disabled = true;
+        stepCompleted = false;
+        geoPassedForCurrent = false;
+        geoBlock.classList.add('hidden');
+        mapPreview.classList.add('hidden');
+        answerInput.disabled = false;
+        answerInput.placeholder = 'Твой ответ...';
+        if (s.useGeo) {
+            geoBlock.classList.remove('hidden');
+            locationStatus.textContent = 'ожидает проверки';
+            mapPreview.classList.remove('hidden');
+            mapPreview.src = MAP_PREVIEW_URL;
+            if (!s.answer) {
+                answerInput.disabled = true;
+                answerInput.placeholder = 'Геозадание';
+                checkAnswerBtn.disabled = true;
+            }
+        }
+    }
+
+    function handleAnswer() {
+        var s = steps[currentStepIndex];
+        if (s.useGeo && !s.answer) { errorMsg.textContent = 'Подтверди местоположение или пропусти'; return; }
+        var u = norm(answerInput.value);
+        if (!u) { errorMsg.textContent = 'Введи ответ'; return; }
+        if (u === norm(s.answer)) {
+            errorMsg.textContent = '✅ Верно!';
+            stepCompleted = true;
+            checkAnswerBtn.disabled = true;
+            answerInput.disabled = true;
+            updateNext();
+        } else {
+            errorMsg.textContent = '❌ Неверно. '+(s.hint?'Подсказка: '+s.hint:'');
+        }
+    }
+
+    function getDist(lat1,lon1,lat2,lon2) {
+        var R=6371e3, φ1=lat1*Math.PI/180, φ2=lat2*Math.PI/180, Δφ=(lat2-lat1)*Math.PI/180, Δλ=(lon2-lon1)*Math.PI/180;
+        var a=Math.sin(Δφ/2)*Math.sin(Δφ/2)+Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)*Math.sin(Δλ/2);
+        return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+    }
+
+    function geoSuccess() {
+        geoPassedForCurrent = true;
+        locationStatus.textContent = '✅ Ты на месте!';
+        if (!steps[currentStepIndex].answer) { stepCompleted = true; answerInput.disabled = true; checkAnswerBtn.disabled = true; }
+        updateNext();
+    }
+
+    function validateCoords(lat,lng) {
+        var d = getDist(lat,lng,GEO_TARGET_LAT,GEO_TARGET_LNG);
+        if (d <= GEO_RADIUS_METERS) geoSuccess();
+        else { geoErrorMsg.textContent = '📍 '+Math.round(d)+'м от цели. Ближе!'; locationStatus.textContent = 'расстояние: '+Math.round(d)+'м'; }
+    }
+
+    function updateNext() {
+        var s = steps[currentStepIndex];
+        nextStepBtn.disabled = !(s.useGeo ? (s.answer ? (stepCompleted&&geoPassedForCurrent) : geoPassedForCurrent) : stepCompleted);
+    }
+
+    function next() {
+        if (currentStepIndex < steps.length-1) { currentStepIndex++; updateUI(currentStepIndex); }
+        else {
+            questScreen.classList.add('hidden');
+            finalScreen.classList.remove('hidden');
+            finalMessageDiv.textContent = FINAL_MESSAGE;
+            leprechaunMessageDiv.textContent = LEPRECHAUN_FINAL_TEXT;
+            if (FINAL_IMAGE_URL) { finalImage.src = FINAL_IMAGE_URL; finalImage.style.display = 'block'; }
+            startConfetti();
+        }
+    }
+
+    // Проверка пин-кода
+    function checkPin() {
+        var entered = pinInput.value.trim();
+        if (entered === ACCESS_PIN) {
+            pinError.textContent = '';
+            // Запускаем квест
+            currentStepIndex = 0;
+            if (confettiInterval) clearInterval(confettiInterval);
+            if (confettiVolleyInterval) clearInterval(confettiVolleyInterval);
+            confettiContainer.innerHTML = '';
+            introScreen.classList.add('hidden');
+            finalScreen.classList.add('hidden');
+            questScreen.classList.remove('hidden');
+            updateUI(0);
+        } else {
+            pinError.textContent = '❌ Неверный код';
+            pinInput.value = '';
+            pinInput.focus();
+        }
+    }
+
+    function restart() {
+        if (confettiInterval) clearInterval(confettiInterval);
+        if (confettiVolleyInterval) clearInterval(confettiVolleyInterval);
+        confettiContainer.innerHTML = '';
+        questScreen.classList.add('hidden');
+        finalScreen.classList.add('hidden');
+        introScreen.classList.remove('hidden');
+        pinInput.value = '';
+        pinError.textContent = '';
+    }
+
+    // Привязка событий
+    startGameBtn.addEventListener('click', checkPin);
+    pinInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            checkPin();
+        }
+    });
+    checkAnswerBtn.addEventListener('click', handleAnswer);
+    nextStepBtn.addEventListener('click', next);
+    document.getElementById('checkLocationBtn').addEventListener('click', function() {
+        if (!navigator.geolocation) { locationStatus.textContent = 'Гео не поддерживается'; return; }
+        locationStatus.textContent = 'определение...';
+        navigator.geolocation.getCurrentPosition(function(p){ validateCoords(p.coords.latitude, p.coords.longitude); }, function(){ locationStatus.textContent = 'Ошибка'; }, { enableHighAccuracy:true, timeout:10000 });
+    });
+    document.getElementById('manualGeoBtn').addEventListener('click', function() {
+        var lat = parseFloat(document.getElementById('manualLatInput').value.replace(',','.'));
+        var lng = parseFloat(document.getElementById('manualLngInput').value.replace(',','.'));
+        if (isNaN(lat)||isNaN(lng)) { geoErrorMsg.textContent = 'Введи оба числа'; return; }
+        validateCoords(lat,lng);
+    });
+    document.getElementById('skipGeoBtn').addEventListener('click', function() {
+        geoPassedForCurrent = true;
+        stepCompleted = true;
+        locationStatus.textContent = '⏭️ Пропущено';
+        answerInput.disabled = true;
+        checkAnswerBtn.disabled = true;
+        updateNext();
+    });
+    document.getElementById('restartBtn').addEventListener('click', restart);
+    answerInput.addEventListener('keypress', function(e) { if (e.key==='Enter' && !checkAnswerBtn.disabled) handleAnswer(); });
+
+    attachSparks();
+})();
+</script>
+</body>
+</html>
