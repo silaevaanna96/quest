@@ -551,14 +551,55 @@
         if (isNaN(lat)||isNaN(lng)) { geoErrorMsg.textContent = 'Введи оба числа'; return; }
         validateCoords(lat,lng);
     });
-    document.getElementById('skipGeoBtn').addEventListener('click', function() {
+    // === Кнопка-убегайка ===
+let skipBtn = document.getElementById('skipGeoBtn');
+let skipClicks = 0; // счётчик попыток нажать "Пропустить"
+
+function moveSkipButton() {
+    // Контейнер, в котором лежит кнопка (блок geoBlock)
+    let container = document.getElementById('geoBlock');
+    if (!container) return;
+    
+    let containerRect = container.getBoundingClientRect();
+    let btnRect = skipBtn.getBoundingClientRect();
+    
+    // Максимальные смещения, чтобы кнопка не выпадала из контейнера
+    let maxLeft = containerRect.width - btnRect.width - 10;
+    let maxTop = containerRect.height - btnRect.height - 10;
+    
+    // Случайное положение
+    let left = Math.random() * maxLeft;
+    let top = Math.random() * maxTop;
+    
+    // Убеждаемся, что не ушли в минус
+    left = Math.max(0, left);
+    top = Math.max(0, top);
+    
+    // Применяем смещение
+    skipBtn.style.left = left + 'px';
+    skipBtn.style.top = top + 'px';
+}
+
+skipBtn.addEventListener('click', function(e) {
+    skipClicks++;
+    
+    if (skipClicks < 4) {
+        // Побег: отменяем стандартное действие и двигаем кнопку
+        e.preventDefault();
+        moveSkipButton();
+    } else {
+        // На 4-й раз реально пропускаем задание
         geoPassedForCurrent = true;
         stepCompleted = true;
         locationStatus.textContent = '⏭️ Пропущено';
         answerInput.disabled = true;
         checkAnswerBtn.disabled = true;
         updateNext();
-    });
+        // Возвращаем кнопку на место
+        skipBtn.style.left = '0px';
+        skipBtn.style.top = '0px';
+    }
+});
     document.getElementById('restartBtn').addEventListener('click', restart);
     answerInput.addEventListener('keypress', function(e) { if (e.key==='Enter' && !checkAnswerBtn.disabled) handleAnswer(); });
 
