@@ -47,7 +47,7 @@
         .card {
             max-width: 550px;
             width: 100%;
-            background: rgba(10,10,10,0.55);
+            background: rgba(10,10,10,0.40);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(25px);
             border: 1.5px solid rgba(180,145,55,0.4);
@@ -256,8 +256,8 @@
 <div class="confetti-container" id="confettiContainer"></div>
 <div class="card" id="appContainer">
     <div id="introScreen">
-        <h1>🎂 С днём рождения,<br>любимый!</h1>
-        <div class="subhead" id="introSubhead">персональный квест</div>
+        <h1>🎂 С днём рождения,<br>Замятышек!</h1>
+        <div class="subhead" id="introSubhead">это твой персональный квест</div>
         <div class="intro-text" id="introText"></div>
         <ul class="rules-list">
             <li>Всего <strong>10 шагов</strong>, один за другим</li>
@@ -274,7 +274,7 @@
             <div class="pin-error" id="pinError"></div>
         </div>
         <button class="btn" id="startGameBtn">🚀 Начать игру</button>
-        <div class="small-note">твой личный квест</div>
+        <div class="small-note">код квеста на обороте</div>
     </div>
     <div id="questScreen" class="hidden">
         <div class="step-indicator" id="stepIndicator"></div>
@@ -327,16 +327,16 @@
     const MAP_PREVIEW_URL = 'https://staticmap.openstreetmap.de/staticmap.php?center='+GEO_TARGET_LAT+','+GEO_TARGET_LNG+'&zoom=17&size=600x300&markers='+GEO_TARGET_LAT+','+GEO_TARGET_LNG+',red-pushpin';
 
     const steps = [
-        { question: "1️⃣ Цветы, что цветут в мороз, дадут тебе первую подсказку. Их называют как неудавшихся (вроде бы?) революционеров.", image: "", answer: "42", hint: "Они на балконе выше всех", useGeo: false },
-        { question: "2️⃣ Я ее обожаю, особенно с молоком! Ты мне ее регулярно готовишь. Давай заглянем к ней, вдруг это прояснит ситуацию?", image: "", answer: "шк гречки", hint: "Там ещё стрелочка, осмотрись внимательнее", useGeo: false },
-        { question: "3️⃣ Есть у нас в районе магазин. Мы его не очень жалуем, но Ессентуки-17 продавались только там.", image: "", answer: "магнит", hint: "Красный логотип", useGeo: false },
-        { question: "4️⃣ Прогуляемся? Может быть, за минералочкой?", image: "", answer: "", hint: "Иди к точке на карте или введи координаты", useGeo: true },
-        { question: "5️⃣ Как думаешь, какой код у картошки в этом магазине?", image: "", answer: "42", hint: "Посмотри на ценник", useGeo: false },
-        { question: "6️⃣ Как думаешь, на какие 3 цифры заканчивается ИНН, который указывается на чеках этого магазина?", image: "", answer: "003", hint: "Три цифры внизу чека", useGeo: false },
-        { question: "7️⃣ Если идти по широкой дороге, друг за другом идут магазины и кафе. Какое слово получится, если ввести их первые буквы?", image: "", answer: "про", hint: "Первые буквы по порядку", useGeo: false },
-        { question: "8️⃣ Люди неохотно меняют стандартные двери. Но наши соседи из 110 квартиры ее уже поменяли. Какого цвета дверь?", image: "", answer: "серая", hint: "Подъездная дверь", useGeo: false },
-        { question: "9️⃣ Мы любим это место, почти каждый обед тут сидим. На чем посидим?", image: "", answer: "диван", hint: "Мягкое и удобное", useGeo: false },
-        { question: "🔟 По левую руку сидит пассажир из Дятьково. Как его зовут?", image: "", answer: "фикус", hint: "Большое растение в проходе", useGeo: false }
+        { question: "Цветы, что цветут в мороз, дадут тебе первую подсказку. Их называют как неудавшихся (вроде бы?) революционеров.", image: "", answer: "42", hint: "Они на балконе выше всех", useGeo: false },
+        { question: "Я ее обожаю, особенно с молоком! Ты мне ее регулярно готовишь. Давай заглянем к ней, вдруг это прояснит ситуацию?", image: "", answer: "шк гречки", hint: "Там ещё стрелочка, осмотрись внимательнее", useGeo: false },
+        { question: "Есть у нас в районе магазин. Мы его не очень жалуем, но Ессентуки-17 продавались только там.", image: "", answer: "магнит", hint: "Красный логотип", useGeo: false },
+        { question: "Прогуляемся? Может быть, за минералочкой?", image: "", answer: "", hint: "Иди к точке на карте или введи координаты", useGeo: true },
+        { question: "Какой код у картошки в этом магазине?", image: "", answer: "42", hint: "Посмотри на ценник", useGeo: false },
+        { question: "На какие 3 цифры заканчивается ИНН, который указывается на чеках этого магазина?", image: "", answer: "003", hint: "Три цифры внизу чека", useGeo: false },
+        { question: "Если идти по широкой дороге, друг за другом идут магазины и кафе. Какое слово получится, если ввести их первые буквы?", image: "", answer: "про", hint: "Первые буквы по порядку", useGeo: false },
+        { question: "Люди неохотно меняют стандартные двери. Но наши соседи из 110 квартиры ее уже поменяли. Какого цвета дверь?", image: "", answer: "серая", hint: "Подъездная дверь", useGeo: false },
+        { question: "Мы любим это место, почти каждый обед тут сидим. На чем посидим?", image: "", answer: "диван", hint: "Мягкое и удобное", useGeo: false },
+        { question: "По левую руку сидит пассажир из Дятьково. Как его зовут?", image: "", answer: "фикус", hint: "Большое растение в проходе", useGeo: false }
     ];
 
     const FINAL_MESSAGE = "🎁 С днём рождения, "+PLAYER_NAME+"!\n\nТы справился со всеми заданиями!\nТы — моя самая большая победа.\n\nЯ тебя очень люблю! ❤️";
