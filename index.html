@@ -3,27 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>🎁 Квест для мужа</title>
+    <title>🎁 Персональный квест</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        /*body {
-            font-family: 'Segoe UI', 'Cormorant Garamond', Georgia, serif;
-            background: #0a0a0a;
-            background-image: radial-gradient(ellipse at 50% 30%, #1a1206 0%, #0a0a0a 60%), radial-gradient(ellipse at 80% 20%, #261d0a 0%, transparent 40%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            margin: 0;
-            color: #e8d5a3;
-            position: relative;
-            overflow-x: hidden;
-        }*/
-        /* ========================================= */
-        /* ⚠️ КАРТИНКА ДЛЯ ФОНА (раскомментируй и вставь ссылку) */
-        /* ========================================= */
-         
+        
         body {
             font-family: 'Segoe UI', 'Cormorant Garamond', Georgia, serif;
             background-color: #0a0a0a; /* запасной цвет */
@@ -42,8 +25,6 @@
             position: relative;
             overflow-x: hidden;
         }
-        
-
         .card {
             max-width: 550px;
             width: 100%;
@@ -257,7 +238,6 @@
 <div class="card" id="appContainer">
     <div id="introScreen">
         <h1>🎂 С днём рождения,<br>Замятышек!</h1>
-        <div class="subhead" id="introSubhead">это твой персональный квест</div>
         <div class="intro-text" id="introText"></div>
         <ul class="rules-list">
             <li>Всего <strong>10 шагов</strong>, один за другим</li>
@@ -318,7 +298,7 @@
     // 🔐 ПИН-КОД (измени на свой, например "2809" или "любовь")
     const ACCESS_PIN = "1706"; // ← ПОМЕНЯЙ ЗДЕСЬ НА СВОЙ ПАРОЛЬ
     const PLAYER_NAME = "Замятышек";
-    const INTRO_TEXT = "Я подготовила для тебя <strong>10 заданий</strong> — загадки, и даже небольшую прогулку.";
+    const INTRO_TEXT = "Я подготовила для тебя <strong>10 заданий</strong> — пару загадок и даже небольшую прогулку.";
     const FINAL_IMAGE_URL = ""; // Ссылка на финальную картинку
     const LEPRECHAUN_FINAL_TEXT = "✨ Говорят, где-то под корнями фикуса леприкон Аня спрятала ништяки... Присмотрись внимательнее! 🍀";
     const GEO_TARGET_LAT = 55.533506;
