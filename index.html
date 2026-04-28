@@ -13,7 +13,7 @@
             background-image: url('https://silaevaanna96.github.io/quest/back.png');
             background-repeat: no-repeat;
             background-position: center center;
-            background-attachment: scroll;   /* изменено с fixed на scroll, чтобы избежать разрывов на мобильных */
+            background-attachment: fixed;
             background-size: cover;
             min-height: 100vh;
             display: flex;
@@ -142,8 +142,6 @@
             color: #8a8a8a;
             font-size: 0.85rem;
             padding: 12px;
-            position: relative;           /* ← ДОБАВЛЕНО */
-            transition: left 0.15s, top 0.15s; /* плавное перемещение */
         }
         .location-row { display: flex; flex-direction: column; gap: 10px; margin: 15px 0 5px; }
         .location-buttons { display: flex; gap: 10px; align-items: center; }
@@ -215,7 +213,10 @@
             background-clip: text;
             filter: drop-shadow(0 2px 6px rgba(0,0,0,0.7));
         }
-        .pin-section { margin: 20px 0 10px; }
+        /* Поле ввода пин-кода */
+        .pin-section {
+            margin: 20px 0 10px;
+        }
         .pin-section input {
             text-align: center;
             letter-spacing: 8px;
@@ -245,6 +246,10 @@
             <li>На 4-м шаге — <strong>геолокация</strong> (можно ввести вручную или пропустить)</li>
             <li>Дойди до конца — там <strong>сюрприз</strong> ❤️</li>
         </ul>
+        <!-- ========================================= -->
+        <!-- 🔐 ПИН-КОД ДЛЯ ДОСТУПА                     -->
+        <!-- ПОМЕНЯЙ "0000" НА СВОЙ ПАРОЛЬ (цифры/слово) -->
+        <!-- ========================================= -->
         <div class="pin-section">
             <input type="password" id="pinInput" placeholder="Введи код" maxlength="10" inputmode="numeric">
             <div class="pin-error" id="pinError"></div>
@@ -288,11 +293,14 @@
 
 <script>
 (function() {
+    // =========================================================
     // НАСТРОЙКИ
-    const ACCESS_PIN = "1706";
+    // =========================================================
+    // 🔐 ПИН-КОД (измени на свой, например "2809" или "любовь")
+    const ACCESS_PIN = "1706"; // ← ПОМЕНЯЙ ЗДЕСЬ НА СВОЙ ПАРОЛЬ
     const PLAYER_NAME = "Замятышек";
     const INTRO_TEXT = "Я подготовила для тебя <strong>10 заданий</strong> — пару загадок и даже небольшую прогулку.";
-    const FINAL_IMAGE_URL = "";
+    const FINAL_IMAGE_URL = ""; // Ссылка на финальную картинку
     const LEPRECHAUN_FINAL_TEXT = "✨ Говорят, где-то под корнями фикуса леприкон Аня спрятала ништяки... Присмотрись внимательнее! 🍀";
     const GEO_TARGET_LAT = 55.533506;
     const GEO_TARGET_LNG = 37.06158;
@@ -336,7 +344,6 @@
     const pinInput = document.getElementById('pinInput');
     const pinError = document.getElementById('pinError');
     const startGameBtn = document.getElementById('startGameBtn');
-    const skipBtn = document.getElementById('skipGeoBtn');
 
     document.getElementById('introSubhead').textContent = "персональный квест";
     document.getElementById('introText').innerHTML = INTRO_TEXT;
@@ -346,7 +353,6 @@
     let geoPassedForCurrent = false;
     let confettiInterval = null;
     let confettiVolleyInterval = null;
-    let skipClicks = 0; // счётчик побегов
 
     function norm(s) { return s.trim().toLowerCase().replace(/\s+/g, ' '); }
 
@@ -410,31 +416,8 @@
         confettiVolleyInterval = setInterval(function(){ volley(90); }, 3800);
     }
 
-    // Функция перемещения кнопки
-    function moveSkipButton() {
-        let container = document.getElementById('geoBlock');
-        if (!container) return;
-        let containerRect = container.getBoundingClientRect();
-        let btnRect = skipBtn.getBoundingClientRect();
-        let maxLeft = containerRect.width - btnRect.width - 10;
-        let maxTop = containerRect.height - btnRect.height - 10;
-        let left = Math.random() * maxLeft;
-        let top = Math.random() * maxTop;
-        left = Math.max(0, left);
-        top = Math.max(0, top);
-        skipBtn.style.left = left + 'px';
-        skipBtn.style.top = top + 'px';
-    }
-
     function updateUI(idx) {
         var s = steps[idx];
-        // Сброс кнопки-убегайки
-        skipClicks = 0;
-        if (skipBtn) {
-            skipBtn.style.left = '0px';
-            skipBtn.style.top = '0px';
-        }
-
         stepIndicator.textContent = 'ШАГ '+(idx+1)+'/'+steps.length;
         questionText.textContent = s.question;
         questImage.style.display = (s.image&&s.image.length>5?'block':'none');
@@ -515,10 +498,12 @@
         }
     }
 
+    // Проверка пин-кода
     function checkPin() {
         var entered = pinInput.value.trim();
         if (entered === ACCESS_PIN) {
             pinError.textContent = '';
+            // Запускаем квест
             currentStepIndex = 0;
             if (confettiInterval) clearInterval(confettiInterval);
             if (confettiVolleyInterval) clearInterval(confettiVolleyInterval);
@@ -545,30 +530,13 @@
         pinError.textContent = '';
     }
 
-    // Обработчик кнопки "Пропустить" с убеганием
-    skipBtn.addEventListener('click', function(e) {
-        skipClicks++;
-        if (skipClicks < 4) {
-            e.preventDefault();
-            moveSkipButton();
-        } else {
-            // 4-й клик – пропускаем
-            geoPassedForCurrent = true;
-            stepCompleted = true;
-            locationStatus.textContent = '⏭️ Пропущено';
-            answerInput.disabled = true;
-            checkAnswerBtn.disabled = true;
-            updateNext();
-            // Возвращаем кнопку на место
-            skipBtn.style.left = '0px';
-            skipBtn.style.top = '0px';
-        }
-    });
-
-    // Остальные обработчики
+    // Привязка событий
     startGameBtn.addEventListener('click', checkPin);
     pinInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') { e.preventDefault(); checkPin(); }
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            checkPin();
+        }
     });
     checkAnswerBtn.addEventListener('click', handleAnswer);
     nextStepBtn.addEventListener('click', next);
@@ -582,6 +550,14 @@
         var lng = parseFloat(document.getElementById('manualLngInput').value.replace(',','.'));
         if (isNaN(lat)||isNaN(lng)) { geoErrorMsg.textContent = 'Введи оба числа'; return; }
         validateCoords(lat,lng);
+    });
+    document.getElementById('skipGeoBtn').addEventListener('click', function() {
+        geoPassedForCurrent = true;
+        stepCompleted = true;
+        locationStatus.textContent = '⏭️ Пропущено';
+        answerInput.disabled = true;
+        checkAnswerBtn.disabled = true;
+        updateNext();
     });
     document.getElementById('restartBtn').addEventListener('click', restart);
     answerInput.addEventListener('keypress', function(e) { if (e.key==='Enter' && !checkAnswerBtn.disabled) handleAnswer(); });
