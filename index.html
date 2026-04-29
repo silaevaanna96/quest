@@ -478,10 +478,16 @@
     }
 
     function validateCoords(lat,lng) {
-        var d = getDist(lat,lng,GEO_TARGET_LAT,GEO_TARGET_LNG);
-        if (d <= GEO_RADIUS_METERS) geoSuccess();
-        else { geoErrorMsg.textContent = '📍 '+Math.round(d)+'м от цели. Ближе!'; locationStatus.textContent = 'расстояние: '+Math.round(d)+'м'; }
+    var d = getDist(lat,lng,GEO_TARGET_LAT,GEO_TARGET_LNG);
+    if (d <= GEO_RADIUS_METERS) {
+        geoSuccess();
+    } else {
+        geoErrorMsg.textContent = '📍 '+Math.round(d)+'м от цели. Ближе!';
+        locationStatus.textContent = 'расстояние: '+Math.round(d)+'м';
+        // Эта строка гарантирует, что кнопка "Пропустить" не заблокирована
+        document.getElementById('skipGeoBtn').disabled = false;
     }
+}
 
     function updateNext() {
         var s = steps[currentStepIndex];
@@ -553,13 +559,17 @@
         if (isNaN(lat)||isNaN(lng)) { geoErrorMsg.textContent = 'Введи оба числа'; return; }
         validateCoords(lat,lng);
     });
-    document.getElementById('skipGeoBtn').addEventListener('click', function() {
+        document.getElementById('skipGeoBtn').addEventListener('click', function(e) {
+        e.stopPropagation(); // чтобы никакой другой обработчик не мешал
         geoPassedForCurrent = true;
         stepCompleted = true;
         locationStatus.textContent = '⏭️ Пропущено';
         answerInput.disabled = true;
         checkAnswerBtn.disabled = true;
+        // Гарантируем, что кнопка "Дальше" разблокируется
         updateNext();
+        // На всякий случай руками разблокируем, если updateNext не сработает
+        nextStepBtn.disabled = false;
     });
     document.getElementById('restartBtn').addEventListener('click', restart);
     answerInput.addEventListener('keypress', function(e) { if (e.key==='Enter' && !checkAnswerBtn.disabled) handleAnswer(); });
