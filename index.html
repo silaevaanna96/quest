@@ -553,12 +553,7 @@
         locationStatus.textContent = 'определение...';
         navigator.geolocation.getCurrentPosition(function(p){ validateCoords(p.coords.latitude, p.coords.longitude); }, function(){ locationStatus.textContent = 'Ошибка'; }, { enableHighAccuracy:true, timeout:10000 });
     });
-    document.getElementById('manualGeoBtn').addEventListener('click', function() {
-        var lat = parseFloat(document.getElementById('manualLatInput').value.replace(',','.'));
-        var lng = parseFloat(document.getElementById('manualLngInput').value.replace(',','.'));
-        if (isNaN(lat)||isNaN(lng)) { geoErrorMsg.textContent = 'Введи оба числа'; return; }
-        validateCoords(lat,lng);
-    });
+    
         document.getElementById('skipGeoBtn').addEventListener('click', function(e) {
         e.stopPropagation(); // чтобы никакой другой обработчик не мешал
         geoPassedForCurrent = true;
